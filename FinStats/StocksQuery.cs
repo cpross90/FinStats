@@ -15,7 +15,8 @@ namespace FinStats
         {
             using var cmd = Db.Connection.CreateCommand();
 
-            cmd.CommandText = @"SELECT Date, Open, High, Low, Close, Adj_Close, Volume FROM STOCK ORDER BY Date DESC LIMIT 10;";
+            cmd.CommandText = @"SELECT High FROM STOCK ORDER BY Date DESC LIMIT 10;";
+            //cmd.CommandText = @"SELECT Date, Open, High, Low, Close, Adj_Close, Volume FROM STOCK ORDER BY Date DESC LIMIT 10;";
 
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
@@ -30,13 +31,13 @@ namespace FinStats
                 {
                     var stock = new Stock(Db)
                     {
-                        Date = reader.GetDateTime(0),
-                        Open = reader.GetFloat(1),
+                        //Date = reader.GetDateTime(0),
+                        //Open = reader.GetFloat(1),
                         High = reader.GetFloat(2),
-                        Low = reader.GetFloat(3),
-                        Close = reader.GetFloat(4),
-                        Adj_Close = reader.GetFloat(5),
-                        Volume = reader.GetFloat(6)
+                        //Low = reader.GetFloat(3),
+                        //Close = reader.GetFloat(4),
+                        //Adj_Close = reader.GetFloat(5),
+                        //Volume = reader.GetFloat(6)
 
                     };
 
