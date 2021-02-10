@@ -10,11 +10,11 @@ namespace FinStats.Services
     {
         public static List<double> Findthemin(int length)
         {
-            List<double> min = StocksQuery();
+            List<double> min = Stock();
             int m_i = min.ToList().IndexOf(min.Min());
             while (m_i == length | m_i ==0)
             { 
-                min = StocksQuery();
+                min = Stock();
                 m_i = min.ToList().IndexOf(min.Min());
             }
             return min;
@@ -37,11 +37,11 @@ namespace FinStats.Services
         }
         public static List<double> Findthemax(int length)
         {
-            List<double> max = StocksQuery();
+            List<double> max = Stock();
             int m_i = max.ToList().IndexOf(max.Max());
             while (m_i == length | m_i == 0)
             {
-                max = StocksQuery();
+                max = Stock();
                 m_i = max.ToList().IndexOf(max.Max());
             }
             return max; 
@@ -61,6 +61,10 @@ namespace FinStats.Services
             }
             */
 
+        }
+        private static List<double> Stock(AppDb db)
+        {
+            throw new NotImplementedException();
         }
 
     }

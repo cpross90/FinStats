@@ -48,69 +48,7 @@ namespace FinStats.Services
             mm[0] = 0;
             mm[1] = 0;
             return mm;
-
-
-            static void SELL(List<double> maxmin, int length)
-        {
-            //string column = "High";
-            //string column2 = "Low";
-            double max_num = maxmin[0];
-            double min_num = maxmin[1];
-
-            List<double> myHigh = new List<double>();
-            List<double> myLow = new List<double>();
-            myHigh = Maxmin.Findthemax(length);
-            double M = myHigh.Max();
-            if (max_num > M)
-            {
-                Console.WriteLine("THE MARKET IS SHOWING A SIGN OF WEAKNESS");
-            }
-            else
-            {
-                maxmin[0] = M;
-                /*start a separate solution called finstats.console
-                 * make it exactly but separate the logic 
-                 * move it 
-                 * console app will do will have that loop logic and if it doesnt meet that
-                 * will go server and call it
-                 * have the server to do the brainy stuff
-                 * you do that verification
-                 * do while a loop to check if true
-                 * 
-                 * MAKE IT A WHILE LOOP NOT RECURSIVE
-                 */
-                return;
-            }
-            myLow = StocksQuery();
-            myLow = Maxmin.Findthemin(length);
-            double L = myLow.Min();
-            if (min_num > L)
-            {
-                Console.WriteLine("ALMOST TIME TO SELL");
-            }
-            else
-            {
-                maxmin[1] = L;
-                return;
-            }
-            myHigh = Maxmin.Findthemax(length);
-            double W = myHigh.Max();
-            if (W < M)
-            {
-                Console.WriteLine("SELL ALREADY!");
-                return;
-            }
-            else
-            {
-                    Console.WriteLine("Looks like the market is good...for now.");
-                    return;
-            }
-
         }
-
-                //you get to this point then tell the user to BUY
-                //when they confirm the price they bought it save it
-            }
         private static void SELL(List<double> maxmin, int length)
         {
             double max_num = maxmin[0];
@@ -118,7 +56,7 @@ namespace FinStats.Services
 
             List<double> myHigh = new List<double>();
             List<double> myLow = new List<double>();
-            myHigh = StocksQuery();
+            myHigh = Stock();
             myHigh = Maxmin.Findthemax(length);
             double M = myHigh.Max();
             if (max_num > M)
@@ -130,7 +68,7 @@ namespace FinStats.Services
                 maxmin[0] = M;
                 return;
             }
-            myLow = StocksQuery();
+            myLow = Stock();
             myLow = Maxmin.Findthemin(length);
             double L = myLow.Min();
             if (min_num > L)
