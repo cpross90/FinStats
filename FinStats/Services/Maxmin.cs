@@ -8,13 +8,18 @@ namespace FinStats.Services
 {
     class Maxmin
     {
+        public CallQuery()
+        {
+
+
+        }
         public static List<double> Findthemin(int length)
         {
-            List<double> min = Stock();
+            List<double> min = CallQuery();
             int m_i = min.ToList().IndexOf(min.Min());
             while (m_i == length | m_i ==0)
             { 
-                min = Stock();
+                min = CallQuery();
                 m_i = min.ToList().IndexOf(min.Min());
             }
             return min;
