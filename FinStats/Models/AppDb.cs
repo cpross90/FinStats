@@ -1,7 +1,7 @@
 using System;
 using MySqlConnector;
 
-namespace FinStats
+namespace FinStats.Models
 {
     public class AppDb : IDisposable
     {

@@ -1,3 +1,5 @@
+using FinStats.Services;
+using FinStats.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,14 +21,16 @@ namespace FinStats
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+            services.AddHostedService<Update>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FinStats", Version = "v1" });
             });
 
-            services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddTransient(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

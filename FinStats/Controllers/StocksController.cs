@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using FinStats;
+using FinStats.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,8 +21,9 @@ namespace Controllers
         public async Task<IActionResult> Get()
         {
             await Db.Connection.OpenAsync();
-            var query = new StocksQuery(Db);
-            var result = await query.LatestStockAsync();
+            var result = await StocksQuery.LatestStockAsync(Db);
+
+            await Db.Connection.CloseAsync();
 
             return new OkObjectResult(result);
         }
