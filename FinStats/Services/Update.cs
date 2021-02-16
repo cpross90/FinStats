@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FinStats.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FinStats.Services
 {
@@ -30,8 +31,13 @@ namespace FinStats.Services
         private void DoWork(object state)
         {
             // Assume result is of type List<stock>
-            var result = CallQuery();
-
+           var result = CallQuery();
+            List<double> High= new List<double> { 1.0,0.0,0.0,0.0 };
+            List<double> Low= new List<double> { 0.5,0.0,0.0,1.0 };
+            double bought = 0;
+            bool b = Buy.TimeToBuy(High, Low);
+            bool s = Sell.TimeToSell(High, Low, bought);
+            StockPredict.Check(b, s);
         }
 
         private async Task<List<Stock>> CallQuery()
@@ -43,6 +49,7 @@ namespace FinStats.Services
             return result;
         }
 
+        
         public Task StopAsync(CancellationToken stoppingToken)
         {
             _timer?.Change(Timeout.Infinite, 0);

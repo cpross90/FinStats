@@ -3,26 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FinStats.Models;
+
+
 
 namespace FinStats.Services
 {
+
     class Maxmin
     {
-        public CallQuery()
+        public static List<double> FindTheMin(List<double> listofStock)
         {
+            /*High
+             * Low
+             * Date
+             * find a way to get only one of three at a time
+            */
 
-
-        }
-        public static List<double> Findthemin(int length)
-        {
-            List<double> min = CallQuery();
-            int m_i = min.ToList().IndexOf(min.Min());
-            while (m_i == length | m_i ==0)
-            { 
-                min = CallQuery();
-                m_i = min.ToList().IndexOf(min.Min());
+            var min = listofStock.Min();
+            int m_i = listofStock.ToList().IndexOf(listofStock.Min());
+            int length = listofStock.Count();
+            if (m_i != (length-1) && m_i !=0)
+            {
+                return listofStock;
             }
-            return min;
+            else
+            {
+                List<double> bad = new List<double> {0.0};
+                return bad;
+            }
+                
             
             /*if (m_i == length)
             {
@@ -40,16 +50,20 @@ namespace FinStats.Services
             }
             */
         }
-        public static List<double> Findthemax(int length)
+        public static List<double> FindTheMax(List<double> listofStock)
         {
-            List<double> max = Stock();
-            int m_i = max.ToList().IndexOf(max.Max());
-            while (m_i == length | m_i == 0)
+            double max = listofStock.Max();
+            int m_i = listofStock.ToList().IndexOf(max);
+            int length = listofStock.Count();
+            if (m_i != (length-1) && m_i != 0)
             {
-                max = Stock();
-                m_i = max.ToList().IndexOf(max.Max());
+                return listofStock;
             }
-            return max; 
+            else
+            {
+                List<double> bad = new List<double> { 0.0 };
+                return bad;
+            }
             /*
             if (m_i == 0)
             {
@@ -67,10 +81,6 @@ namespace FinStats.Services
             */
 
         }
-        private static List<double> Stock(AppDb db)
-        {
-            throw new NotImplementedException();
-        }
-
+       
     }
 }
