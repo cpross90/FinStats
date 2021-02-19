@@ -11,7 +11,7 @@ namespace FinStats
         {
             using var cmd = db.Connection.CreateCommand();
 
-            cmd.CommandText = @"SELECT High, Low FROM STOCK ORDER BY Date DESC LIMIT 100;";
+            cmd.CommandText = @"SELECT High, Low FROM STOCK ORDER BY Date DESC LIMIT 10;";
 
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
