@@ -1,11 +1,12 @@
 using FinStats.Services;
-using FinStats.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+
+using FinStats.Data;
 
 namespace FinStats
 {
@@ -15,7 +16,6 @@ namespace FinStats
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -23,14 +23,13 @@ namespace FinStats
         {
             services.AddControllers();
             services.AddHostedService<Update>();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FinStats", Version = "v1" });
             });
 
-            services.AddTransient(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
-
+            services.AddTransient(_ => new AppDb(Configuration["ConnectionStrings:MySQL"]));
+            services.AddTransient(_ => new Finnhub(Configuration["ConnectionStrings:Finnhub"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,11 +43,8 @@ namespace FinStats
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
