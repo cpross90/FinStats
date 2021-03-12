@@ -1,58 +1,64 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
+
 using FinStats.Models;
-using System.Collections.Generic;
 
-namespace FinStats.Services
+namespace FinStats.Data
 {
-    public class Update : IHostedService, IDisposable
+    public class Update : IHostedService
     {
-        private Timer _timer;
-        public AppDb Db { get; }
-
-        public Update(AppDb db)
+        readonly AppDb Db;
+        readonly Finnhub API;
+        List<string> Subscriptions;
+        public Update(AppDb db, Finnhub api)
         {
             Db = db;
+            API = api;
         }
-
         public Task StartAsync(CancellationToken stoppingToken)
-        {   /*It is set to five seconds. Way later when you can look
-            *into changing it to a different time metric
-            */
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+        {
+            SetupConnection();
+            CreateChannel();
 
             return Task.CompletedTask;
         }
-
-        private void DoWork(object state)
+        private async void SetupConnection()
         {
-            // Assume result is of type List<stock>
-            var result = CallQuery();
+            await API.Connection.StartAsync();
 
+            LoadSubscriptions();
+
+            foreach (var sub in Subscriptions)
+            {
+                await API.Connection.SendAsync("type: subscribe", $"symbol: {sub}");
+            }
         }
-
-        private async Task<List<Stock>> CallQuery()
+        private async void LoadSubscriptions()
         {
-            await Db.Connection.OpenAsync();
-            var result = await StocksQuery.LatestStockAsync(Db);
-            await Db.Connection.CloseAsync();
-
-            return result;
+            Subscriptions = await StocksQuery.TickerSymbols(Db);
         }
+        private async void CreateChannel()
+        {
+            var channel = await API.Connection.StreamAsChannelAsync<StockAPI>("message", CancellationToken.None);
 
+            while(channel.TryRead(out var stock))
+            {
+                await Db.Connection.OpenAsync();
+
+                var result = await StocksQuery.UpdateLatestAsync(Db, stock);
+
+                System.Console.Error.WriteLine($"SQL write operation return code: {result}");
+
+                await Db.Connection.CloseAsync();
+            }
+        }
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
         }
     }
 }
