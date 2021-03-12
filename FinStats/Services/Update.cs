@@ -38,7 +38,11 @@ namespace FinStats.Data
         }
         private async void LoadSubscriptions()
         {
+            await Db.Connection.OpenAsync();
+
             Subscriptions = await StocksQuery.TickerSymbols(Db);
+
+            await Db.Connection.CloseAsync();
         }
         private async void CreateChannel()
         {
