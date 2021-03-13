@@ -29,7 +29,7 @@ namespace FinStats
             });
 
             services.AddTransient(_ => new AppDb(Configuration["ConnectionStrings:MySQL"]));
-            services.AddTransient(_ => new Finnhub(Configuration["ConnectionStrings:Finnhub"]));
+            services.AddTransient(_ => new Finnhub(Configuration["ConnectionStrings:Finnhub"], Configuration["API_Keys:Finnhub"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
