@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
 using FinStats.Models;
+using System.Text.Json;
 
 namespace FinStats.Data
 {
@@ -20,12 +21,16 @@ namespace FinStats.Data
         }
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            SetupConnection();
-            CreateChannel();
+            StartWebSocket(); 
 
             return Task.CompletedTask;
         }
-        private async void SetupConnection()
+        private async void StartWebSocket()
+        {
+            await SetupConnection();
+            await CreateChannel();
+        }
+        private async Task SetupConnection()
         {
             await API.Connection.StartAsync();
 
@@ -33,7 +38,8 @@ namespace FinStats.Data
 
             foreach (var sub in Subscriptions)
             {
-                await API.Connection.SendAsync("type: subscribe", $"symbol: {sub}");
+                // Need to convert to JSON
+                //await API.Connection.SendAsync("send", );
             }
         }
         private async void LoadSubscriptions()
@@ -44,7 +50,7 @@ namespace FinStats.Data
 
             await Db.Connection.CloseAsync();
         }
-        private async void CreateChannel()
+        private async Task CreateChannel()
         {
             var channel = await API.Connection.StreamAsChannelAsync<StockAPI>("message", CancellationToken.None);
 
